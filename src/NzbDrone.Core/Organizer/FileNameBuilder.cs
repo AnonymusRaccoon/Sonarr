@@ -420,7 +420,7 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{Series TitleTheYear}"] = m => TitleYear(TitleThe(series.Title), series.Year);
             tokenHandlers["{Series TitleFirstCharacter}"] = m => TitleThe(series.Title).Substring(0, 1).FirstCharToUpper();
             if (forEpisode)
-	            tokenHandlers["{Series DirectoryName}"] = m => Path.GetDirectoryName(series.Path) ?? GetSeriesFolder(series);
+	            tokenHandlers["{Series DirectoryName}"] = m => Path.GetFileName(series.Path) ?? GetSeriesFolder(series);
         }
 
         private string AddSeasonEpisodeNumberingTokens(string pattern, Dictionary<string, Func<TokenMatch, string>> tokenHandlers, List<Episode> episodes, NamingConfig namingConfig)
