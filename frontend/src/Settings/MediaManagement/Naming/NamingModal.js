@@ -50,7 +50,7 @@ const seriesTokens = [
   { token: '{Series TitleTheYear}', example: 'Series Title, The (2010)', episodeOnly: false },
   { token: '{Series TitleYear}', example: 'Series Title (2010)', episodeOnly: false },
   { token: '{Series TitleFirstCharacter}', example: 'S', episodeOnly: false },
-  { token: '{Series DirectoryName}', example: 'Series Title!', episodeOnly: true}
+  { token: '{Series DirectoryName}', example: 'Series Title!', episodeOnly: true }
 ];
 
 const seriesIdTokens = [
@@ -257,8 +257,9 @@ class NamingModal extends Component {
               <div className={styles.groups}>
                 {
                   seriesTokens.map(({ token, example, episodeOnly }) => {
-                    if (episodeOnly && !episode)
-			  return (null);
+                    if (episodeOnly && !episode) {
+                      return (null);
+                    }
                     return (
                       <NamingOption
                         key={token}
