@@ -43,14 +43,14 @@ const fileNameTokens = [
 ];
 
 const seriesTokens = [
-  { token: '{Series Title}', example: 'Series Title!' },
-  { token: '{Series CleanTitle}', example: 'Series Title' },
-  { token: '{Series CleanTitleYear}', example: 'Series Title 2010' },
-  { token: '{Series TitleThe}', example: 'Series Title, The' },
-  { token: '{Series TitleTheYear}', example: 'Series Title, The (2010)' },
-  { token: '{Series TitleYear}', example: 'Series Title (2010)' },
-  { token: '{Series TitleFirstCharacter}', example: 'S' },
-  { token: '{Series DirectoryName}', example: 'Series Title'}
+  { token: '{Series Title}', example: 'Series Title!', episodeOnly: false },
+  { token: '{Series CleanTitle}', example: 'Series Title', episodeOnly: false },
+  { token: '{Series CleanTitleYear}', example: 'Series Title 2010', episodeOnly: false },
+  { token: '{Series TitleThe}', example: 'Series Title, The', episodeOnly: false },
+  { token: '{Series TitleTheYear}', example: 'Series Title, The (2010)', episodeOnly: false },
+  { token: '{Series TitleYear}', example: 'Series Title (2010)', episodeOnly: false },
+  { token: '{Series TitleFirstCharacter}', example: 'S', episodeOnly: false },
+  { token: '{Series DirectoryName}', example: 'Series Title!', episodeOnly: true}
 ];
 
 const seriesIdTokens = [
@@ -256,7 +256,9 @@ class NamingModal extends Component {
             <FieldSet legend="Series">
               <div className={styles.groups}>
                 {
-                  seriesTokens.map(({ token, example }) => {
+                  seriesTokens.map(({ token, example, episodeOnly }) => {
+                    if (episodeOnly && !episode)
+			  return (null);
                     return (
                       <NamingOption
                         key={token}

@@ -153,7 +153,7 @@ namespace NzbDrone.Core.Organizer
 
                 UpdateMediaInfoIfNeeded(splitPattern, episodeFile, series);
 
-                AddSeriesTokens(tokenHandlers, series);
+                AddSeriesTokens(tokenHandlers, series, true);
                 AddIdTokens(tokenHandlers, series);
                 AddEpisodeTokens(tokenHandlers, episodes);
                 AddEpisodeTitlePlaceholderTokens(tokenHandlers);
@@ -410,7 +410,7 @@ namespace NzbDrone.Core.Organizer
             });
         }
 
-        private void AddSeriesTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, Series series)
+        private void AddSeriesTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, Series series, bool forEpisode = false)
         {
             tokenHandlers["{Series Title}"] = m => series.Title;
             tokenHandlers["{Series CleanTitle}"] = m => CleanTitle(series.Title);
@@ -419,7 +419,8 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{Series TitleYear}"] = m => TitleYear(series.Title, series.Year);
             tokenHandlers["{Series TitleTheYear}"] = m => TitleYear(TitleThe(series.Title), series.Year);
             tokenHandlers["{Series TitleFirstCharacter}"] = m => TitleThe(series.Title).Substring(0, 1).FirstCharToUpper();
-            tokenHandlers["{Series DirectoryName}"] = m => Path.GetDirectoryName(series.Path) ?? GetSeriesFolder(series);
+            if (forEpisode)
+	            tokenHandlers["{Series DirectoryName}"] = m => Path.GetDirectoryName(series.Path) ?? GetSeriesFolder(series);
         }
 
         private string AddSeasonEpisodeNumberingTokens(string pattern, Dictionary<string, Func<TokenMatch, string>> tokenHandlers, List<Episode> episodes, NamingConfig namingConfig)
