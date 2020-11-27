@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
@@ -71,9 +72,7 @@ namespace NzbDrone.Core.Indexers.Nyaa
 
             foreach (var queryTitle in searchCriteria.EpisodeQueryTitles)
             {
-                pageableRequests.Add(GetPagedRequests(MaxPages,
-                    string.Format("&term={0}",
-                    PrepareQuery(queryTitle))));
+                pageableRequests.Add(GetPagedRequests(MaxPages, PrepareQuery(queryTitle)));
             }
 
             return pageableRequests;
@@ -81,11 +80,20 @@ namespace NzbDrone.Core.Indexers.Nyaa
 
         private IEnumerable<IndexerRequest> GetPagedRequests(int maxPages, string term)
         {
-            var baseUrl = string.Format("{0}/?page=rss{1}", Settings.BaseUrl.TrimEnd('/'), Settings.AdditionalParameters);
+            var baseUrl = $"{Settings.BaseUrl.TrimEnd('/')}/?page=rss{Settings.AdditionalParameters}";
 
             if (term != null)
             {
-                baseUrl += "&term=" + term;
+	            if (baseUrl.Contains("&term="))
+	            {
+		            int startIndex = baseUrl.IndexOf("&term=", StringComparison.Ordinal) + 6;
+		            int length = baseUrl.IndexOf('&', startIndex) - startIndex;
+		            string baseTerm = length > 0 ? baseUrl.Substring(startIndex, length) : baseUrl.Substring(startIndex);
+		            term = $"{baseTerm}+{term}";
+		            baseUrl = length > 0 ? baseTerm.Remove(startIndex - 6, length) : baseUrl.Remove(startIndex - 6);
+	            }
+
+	            baseUrl += "&term=" + term;
             }
 
             if (PageSize == 0)
